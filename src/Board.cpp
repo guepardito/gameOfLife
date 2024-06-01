@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../includes/Board.hpp"
+#include "Board.hpp"
 
 using namespace std;
 
@@ -93,6 +93,10 @@ void Board::genNextGeneration() {
         }
     }
 
+}
+
+void Board::cleanBoard() {
+    memset(board, 0, sizeof(board));
 }
 
 void Board::draw(RenderTarget& rt, RenderStates rs) const {

@@ -1,14 +1,15 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "../includes/Board.hpp"
+#include "Board.hpp"
+#include "Menu.hpp"
 
 using namespace sf;
 
 int main() {
     RenderWindow window(
         VideoMode(
-            (BOARD_SIZE * BOARD_SHAPE_SIZE), 
+            (BOARD_SIZE * BOARD_SHAPE_SIZE) + MENU_SIZE,
             BOARD_SIZE * BOARD_SHAPE_SIZE
             ), 
         "Game Of Life (Conway's Game)"
@@ -16,6 +17,8 @@ int main() {
     window.setFramerateLimit(5);
 
     Board board;
+    Menu menu;
+
     bool isGameRunning = false;
 
     while (window.isOpen()) {
@@ -34,7 +37,6 @@ int main() {
                 isGameRunning ? (isGameRunning = false) : (isGameRunning = true);
                 cout << isGameRunning << endl;
             }
-
         }
 
         if (isGameRunning)
@@ -47,6 +49,7 @@ int main() {
 
         window.clear(Color(22, 22, 22));
         window.draw(board);
+        window.draw(menu);
         window.display();
     
     }
