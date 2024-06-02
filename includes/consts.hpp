@@ -4,6 +4,8 @@
 #define BOARD_SIZE 90
 #define BOARD_SHAPE_SIZE 10
 
+#define BOARD_WIDTH BOARD_SIZE*BOARD_SHAPE_SIZE
+
 // Menu
 #define MENU_SIZE 400
 #define MENU_GRID_SIZE 5

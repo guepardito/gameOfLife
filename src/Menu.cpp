@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Menu::Menu() {
+Menu::Menu(Board& b) : board(b) {
     if (!font.loadFromFile("../fonts/Gohu.ttf")) {
         cout << "no se ha podido cargar la fuente Gohu.ttf" << endl;
     } else {
@@ -13,7 +13,7 @@ Menu::Menu() {
     
     for (int i = 0; i < MENU_GRID_SIZE; i++) {
         gridShape[i] = RectangleShape(Vector2f(MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT));
-        gridShape[i].setPosition(BOARD_SIZE * BOARD_SHAPE_SIZE + 25, i*MENU_BUTTON_HEIGHT + 25*i + 25);
+        gridShape[i].setPosition(BOARD_WIDTH + 25, i*MENU_BUTTON_HEIGHT + 25*i + 25);
         gridShape[i].setFillColor(Color(50, 50, 50));
         gridShape[i].setOutlineColor(Color(0, 0, 0));
         gridShape[i].setOutlineThickness(2);
@@ -49,11 +49,61 @@ Menu::Menu() {
         gridText[i].setStyle(Text::Bold);
 
         int xDiff = MENU_BUTTON_WIDTH - gridText[i].getLocalBounds().width;
-        int textPosX = (BOARD_SIZE * BOARD_SHAPE_SIZE) + 25 + xDiff/2;
+        int textPosX = (BOARD_WIDTH) + 25 + xDiff/2;
         int textPosY = i * (MENU_BUTTON_HEIGHT + 25) + 25;
         gridText[i].setPosition(textPosX, textPosY);
 
         cout << gridText[i].getPosition().x << " " << gridText[i].getPosition().y << endl;
+    }
+}
+
+void Menu::handleButtonClick(int x, int y, Event::EventType event) {
+    const int menuXStart = BOARD_WIDTH + 25;
+    const int menuXEnd = BOARD_WIDTH + MENU_SIZE - 25;
+
+    // Verificar que se haya clicado en la zona x de los botones
+    if (x > menuXStart && x < menuXEnd) {
+        for (int i = 0; i < MENU_GRID_SIZE; ++i) {
+            const int buttonYStart = i * (MENU_BUTTON_HEIGHT + 25) + 25;
+            const int buttonYEnd = buttonYStart + MENU_BUTTON_HEIGHT;
+
+            // Verificar que se haya clicado en el botón i
+            if (y > buttonYStart && y < buttonYEnd) {
+                changeButtonClickStyle(i, event);
+
+                switch (i) {
+                    case 0:
+                        board.genRandomBoard();
+                        break;
+                    case 1:
+                        board.cleanBoard();
+                        break;
+                    case 2:
+                        cout << "save" << endl;
+                        break;
+                    case 3:
+                        cout << "load" << endl;
+                        break;
+                    case 4:
+                        cout << "about" << endl;
+                        break;
+                    default:
+                        break;
+                }
+                break; // Salir del bucle después de encontrar el botón correcto
+            }
+        }
+    }
+
+}
+
+void Menu::changeButtonClickStyle(int button, Event::EventType event) {
+    if (event == Event::MouseButtonReleased) {
+        gridText[button].setFillColor(Color(255, 255, 255));
+        gridShape[button].setFillColor(Color(50, 50, 50));
+    } else {
+        gridText[button].setFillColor(Color(50, 50, 50));
+        gridShape[button].setFillColor(Color(255, 255, 255));
     }
 }
 

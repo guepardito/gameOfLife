@@ -1,5 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include <iostream>
+#include <SFML/System.hpp>
 
 #include "Board.hpp"
 #include "Menu.hpp"
@@ -9,17 +9,20 @@ using namespace sf;
 int main() {
     RenderWindow window(
         VideoMode(
-            (BOARD_SIZE * BOARD_SHAPE_SIZE) + MENU_SIZE,
-            BOARD_SIZE * BOARD_SHAPE_SIZE
+            BOARD_WIDTH + MENU_SIZE,
+            BOARD_WIDTH
             ), 
         "Game Of Life (Conway's Game)"
         );
-    window.setFramerateLimit(5);
+    window.setFramerateLimit(60);
 
     Board board;
-    Menu menu;
+    Menu menu(board);
 
     bool isGameRunning = false;
+
+    Clock generationClock;
+    const float generationInterval = .2f;
 
     while (window.isOpen()) {
         Event event;
@@ -31,19 +34,29 @@ int main() {
                 int mouseX = event.mouseButton.x;
                 int mouseY = event.mouseButton.y;
                 board.handleClick(mouseX, mouseY);
+                menu.handleButtonClick(mouseX, mouseY, event.type);
+            }
+
+            if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
+                int mouseX = event.mouseButton.x;
+                int mouseY = event.mouseButton.y;
+                menu.handleButtonClick(mouseX, mouseY, event.type);
             }
 
             if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space) {
-                isGameRunning ? (isGameRunning = false) : (isGameRunning = true);
-                cout << isGameRunning << endl;
+                isGameRunning = !isGameRunning;
+                if (isGameRunning) {
+                    generationClock.restart();
+                }
             }
         }
 
-        if (isGameRunning)
-        {
-            board.genNextGeneration();
+        if (isGameRunning) {
+            if (generationClock.getElapsedTime().asSeconds() >= generationInterval) {
+                board.genNextGeneration();
+                generationClock.restart(); // Reiniciar el reloj después de llamar a la función
+            }
         }
-        
 
         board.updateBoardColor();
 
@@ -51,7 +64,6 @@ int main() {
         window.draw(board);
         window.draw(menu);
         window.display();
-    
     }
 
     return 0;

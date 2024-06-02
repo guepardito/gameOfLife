@@ -19,6 +19,7 @@ class Board : public Drawable {
         int countCells(int x, int y);
         void genNextGeneration();
 
+        void genRandomBoard();
         void cleanBoard();
 
         virtual void draw(RenderTarget&, RenderStates) const;

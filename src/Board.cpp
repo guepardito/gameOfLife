@@ -38,9 +38,6 @@ void Board::handleClick(int x, int y) {
 
     if (i >= 0 && i < BOARD_SIZE && j >= 0 && j < BOARD_SIZE) {
         board[i][j] = (board[i][j] + 1) % 2;
-
-        cout << "Se ha cambiado la celula x: " << i << ", y: " << j;
-        cout << "... ahora esta " << ((board[i][j] == 0) ? "muelto" : "vivo") << endl;
     }
 }
 
@@ -93,6 +90,16 @@ void Board::genNextGeneration() {
         }
     }
 
+}
+
+void Board::genRandomBoard() {
+    srand(time(NULL));
+    
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        for (int j = 0; j < BOARD_SIZE; j++) {
+            board[i][j] = rand() % 2;
+        }
+    }
 }
 
 void Board::cleanBoard() {
