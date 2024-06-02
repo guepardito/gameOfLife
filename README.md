@@ -43,3 +43,4 @@ To run this project locally, follow these steps:
 ## Controls
 
     Start/Pause: Spacebar
+    Click con the squares to grow/kill a cell
